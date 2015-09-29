@@ -41,8 +41,8 @@ h(1:ny+2,1:nx+2)=h_base+p_amp*sin(pi*j/ny).*sin(pi*i/nx);
 %h(1:ny+2,1:nx+2)=h_base+p_amp*exp(-((j'-20).^2+(i'-20).^2)/(5^2));
 u(1:ny+2,1:nx+2)=0; %no wind
 v(1:ny+2,1:nx+2)=0;
-%u(y,x)=-(g/f)*(h(y+1,x)-h(y-1,x))/(2*dy); %geostrophic wind (ug,vg)
-%v(y,x)= (g/f)*(h(y,x+1)-h(y,x-1))/(2*dx);
+u(y,x)=-(g/f)*(h(y+1,x)-h(y-1,x))/(2*dy); %geostrophic wind (ug,vg)
+v(y,x)= (g/f)*(h(y,x+1)-h(y,x-1))/(2*dx);
 
 % model integration in time
 for t=1:nt
