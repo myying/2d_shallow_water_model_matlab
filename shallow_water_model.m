@@ -1,5 +1,7 @@
 clear all; close all;
 
+colormap(textread('BlueRed.rgb')/255);
+
 % grid and numeric parameters
 nx=37;
 ny=37;
@@ -18,7 +20,7 @@ nifwind=1;
 nifdif=0;
 nifad=1;
 
-numerics=4; % 0 = forward in time
+numerics=1; % 0 = forward in time
             % 1 = centered in time
             % 4 = Runge-Kutta 4th order in time
 bc_type=1;  % 0 = cyclic
@@ -32,19 +34,19 @@ animation_delay=0.001;
 time=0;
 hbar=8000;
 amp=100;
-hcx=20; hcy=20; hw=3;
 [j,i]=meshgrid(1:ny+2,1:nx+2);
-%h(1:ny+2,1:nx+2)=hbar+amp*peaks(nx+2)/10;  %perturb h
-h(1:ny+2,1:nx+2)=hbar+amp*exp(-((j'-hcy).^2+(i'-hcx).^2)/(hw^2));
+h(1:ny+2,1:nx+2)=hbar+amp*peaks(nx+2)/10; %perturb h
+h(1:ny+2,1:nx+2)=hbar+amp*exp(-((j'-20).^2+(i'-20).^2)/(2^2));
 u(1:ny+2,1:nx+2)=vel;
 v(1:ny+2,1:nx+2)=0;
+x=2:nx+1; y=2:ny+1;
 %u(y,x)=-(g/f)*(h(y+1,x)-h(y-1,x))/(2*dy); %geostrophic wind (ug,vg)
 %v(y,x)= (g/f)*(h(y,x+1)-h(y,x-1))/(2*dx);
 
 % model integration in time
 for n=1:nt
   x=2:nx+1; y=2:ny+1;
-  
+
   if(numerics==0) %FT (Euler)
     u(y,x)=u(y,x)+dt*rhs_u(u,v,h,nx,ny,dx,dy,g,f,nifcor,nifwind,nifad);
     v(y,x)=v(y,x)+dt*rhs_v(u,v,h,nx,ny,dx,dy,g,f,nifcor,nifwind,nifad);
@@ -110,8 +112,8 @@ for n=1:nt
   elseif(bc_type==1) %reflective
     u(:,1)=0; u(:,end)=0;
     v(1,:)=0; v(end,:)=0;
-    h(1,:)=h(2,:); h(end,:)=h(end-1,:); h(:,1)=h(:,2); h(:,end)=h(:,end-1);
-    
+    h(1,:)=h(2,:); h(end,:)=h(end-1,:); h(:,1)=h(:,2); h(:,end)=h(:,end-1); 
+
   elseif(bc_type==2) %radiation
 
   end  
