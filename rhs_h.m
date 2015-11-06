@@ -1,6 +1,0 @@
-function rhs=rhs_h(u,v,h,nx,ny,dx,dy,nifad)
-	x=2:nx+1; y=2:ny+1;
-	rhs = nifad*(-u(y,x).*(h(y,x+1)-h(y,x-1))/(2*dx) ...
-                 -v(y,x).*(h(y+1,x)-h(y-1,x))/(2*dy) ) ...
-          -h(y,x).*((u(y,x+1)-u(y,x-1))/(2*dx)+(v(y+1,x)-v(y-1,x))/(2*dy));
-end
