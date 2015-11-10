@@ -8,6 +8,8 @@ nx=101; ny=101;     %number of grid points
 dt=100;             %time step (s)
 nt=1000;            %number of time steps
 
+[j,i]=meshgrid(1:ny+2,1:nx+2);
+
 cx=0; cy=0;     %advection velocity
 hbar=8000;      %base level of height
 amp=100;        %hill amplitude
@@ -16,7 +18,8 @@ hw=20;          %hill width
 
 % physics parameters
 g=9.8;      %gravity
-f=0.0001;   %Coriolis
+beta=0.0; f0=0.0001; %Coriolis parameters
+f(1:ny+2,1:nx+2)=f0+beta*(j-ny/2)/ny;
 ka=100;     %diffusion coef
 
 nifcor=1;   %if 1, include Coriolis
@@ -39,13 +42,12 @@ show_wind=1;           %if 1, plot wind vectors on top of height
 % initial condition
 x=2:nx+1; y=2:ny+1;
 time=0; %time in seconds
-[j,i]=meshgrid(1:ny+2,1:nx+2);
 h(1:ny+2,1:nx+2)=hbar+amp*exp(-((j'-hcy).^2+(i'-hcx).^2)/((hw/4)^2));
 u(1:ny+2,1:nx+2)=cx;
 v(1:ny+2,1:nx+2)=cy;
 if(balanced_wind==1) %geostrophic wind (ug,vg)
-  u(y,x)=-(g/f)*(h(y+1,x)-h(y-1,x))/(2*dy);
-  v(y,x)= (g/f)*(h(y,x+1)-h(y,x-1))/(2*dx);
+  u(y,x)=-(g./f(y,x)).*(h(y+1,x)-h(y-1,x))/(2*dy);
+  v(y,x)= (g./f(y,x)).*(h(y,x+1)-h(y,x-1))/(2*dx);
 end
 
 % model integration in time
